@@ -73,7 +73,7 @@ function displayModalUser(user) {
     <p class="modal--p">${modalUser.phone}</p>
     <p class="modal--p">${modalUser.location.street.number} ${modalUser.location.street.name}
     <p class="modal--p">Birthday: ${modalDOB[0]}</p>
-    <button id="prev-button">Previous</button> <button id="next-button">Next</button>
+    <button id="prev-button" class="modal--button">Previous</button> <button id="next-button" class="modal--button">Next</button>
   `;
   modalContainerUser.innerHTML = modalUserData;
 

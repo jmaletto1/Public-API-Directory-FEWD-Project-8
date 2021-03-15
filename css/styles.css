@@ -172,6 +172,27 @@ p {
 }
 
 /* Modal Buttons */
-button:hover {
+
+.modal--button {
+  border: 1px solid white;
+  border-radius: 5px;
+  color: white;
+  height: 30px;
+  width: 70px;
+  transition: all 0.3s ease-in;
+}
+
+.modal--button:hover {
   cursor: pointer;
+  opacity: 0.7;
+  transform: scale(1.05);
+}
+
+#prev-button {
+  background-color: violet;
+  margin-right: 0.25rem;
+}
+
+#next-button {
+  background-color: dodgerblue;
 }
