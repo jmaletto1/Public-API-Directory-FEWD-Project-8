@@ -8,12 +8,15 @@ fetch(apiUrl)
   .then((data) => (userData = data.results))
   .then((data) => {
     userData.push(data.results);
+    if (userData.length > 12) {
+      userData.pop();
+    }
     displayUsers(data);
   })
   .catch((error) => console.log("There's been an error!", error));
 
 function displayUsers(data) {
-  for (let x = 0; x < data.length - 1; x++) {
+  for (let x = 0; x < data.length; x++) {
     let userCard = `
     <div class="user__card" id="${x}">
         <div class="user__image">
@@ -32,12 +35,36 @@ function displayUsers(data) {
   userCards.forEach((item) => {
     item.addEventListener("click", (e) => {
       currentUser = e.target.closest("div.user__card").id;
-      displayModalUser(currentUser);
+      displayModalUser(currentUser, data);
     });
+  });
+
+  // Search Button Function
+  const searchInput = document.getElementById("search");
+  searchInput.addEventListener("keyup", (e) => {
+    let searchResults = [];
+    let search = e.target.value.toLowerCase();
+    if (search) {
+      for (let x = 0; x < userData.length; x++) {
+        const firstName = userData[x].name.first.toLowerCase();
+        const lastName = userData[x].name.last.toLowerCase();
+
+        if (firstName.includes(search) || lastName.includes(search)) {
+          searchResults.push(userData[x]);
+        }
+      }
+      if (searchResults) {
+        $(userContainer).empty();
+        displayUsers(searchResults);
+      }
+    } else {
+      $(userContainer).empty();
+      displayUsers(userData);
+    }
   });
 }
 
-function displayModalUser(user) {
+function displayModalUser(user, data) {
   currentUser = parseInt(currentUser);
   // Select the necessary DOM elements.
   const modalContainer = document.querySelector(".modal__container");
@@ -59,7 +86,7 @@ function displayModalUser(user) {
   });
 
   // Display Modal Window user Data
-  const modalUser = userData[user];
+  const modalUser = data[user];
 
   // Split the birthday into a usable format
   const modalDOB = modalUser.dob.date.split("T");
@@ -86,16 +113,16 @@ function displayModalUser(user) {
       modalContainer.style.display = "none";
     } else {
       currentUser -= 1;
-      displayModalUser(currentUser);
+      displayModalUser(currentUser, data);
     }
   });
 
   nextButton.addEventListener("click", () => {
-    if (currentUser === 11) {
+    if (currentUser === data.length - 1) {
       modalContainer.style.display = "none";
     } else {
       currentUser += 1;
-      displayModalUser(currentUser);
+      displayModalUser(currentUser, data);
     }
   });
 }
