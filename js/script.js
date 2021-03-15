@@ -54,11 +54,17 @@ function displayUsers(data) {
         }
       }
       if (searchResults) {
-        $(userContainer).empty();
+        // $(userContainer).empty();
+        while (userContainer.firstChild) {
+          userContainer.removeChild(userContainer.lastChild);
+        }
         displayUsers(searchResults);
       }
     } else {
-      $(userContainer).empty();
+      while (userContainer.firstChild) {
+        userContainer.removeChild(userContainer.lastChild);
+      }
+      // $(userContainer).empty();
       displayUsers(userData);
     }
   });
