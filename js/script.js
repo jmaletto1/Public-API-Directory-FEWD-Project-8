@@ -1,5 +1,6 @@
 const apiUrl = "https://randomuser.me/api/?results=12";
 let userData = [];
+let currentUser = 0;
 const userContainer = document.querySelector(".employee__container");
 
 fetch(apiUrl)
@@ -7,25 +8,94 @@ fetch(apiUrl)
   .then((data) => (userData = data.results))
   .then((data) => {
     userData.push(data.results);
-    console.log(userData);
-    userData.map((user) => callEmail(user));
+    displayUsers(data);
   })
   .catch((error) => console.log("There's been an error!", error));
 
-const callEmail = (data) => {
-  const userCard = `
-    <div class="user__card">
-        <div>
-            <img src="${data.picture.medium}">
+function displayUsers(data) {
+  for (let x = 0; x < data.length - 1; x++) {
+    let userCard = `
+    <div class="user__card" id="${x}">
+        <div class="user__image">
+            <img src="${data[x].picture.medium}">
         </div>
         <div>
-        <h2>${data.name.first} ${data.name.last}</h2>
-        </div>
-        <div>
-            <p>${data.email}</p>
-            <p>${data.location.city} </p>
+        <h2>${data[x].name.first} ${data[x].name.last}</h2>
+            <p>${data[x].email}</p>
+            <p>${data[x].location.city} </p>
         </div>
     </div>
   `;
-  userContainer.insertAdjacentHTML("beforeend", userCard);
-};
+    userContainer.insertAdjacentHTML("beforeend", userCard);
+  }
+  const userCards = document.querySelectorAll(".user__card");
+  userCards.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      currentUser = e.target.closest("div.user__card").id;
+      displayModalUser(currentUser);
+    });
+  });
+}
+
+function displayModalUser(user) {
+  currentUser = parseInt(currentUser);
+  // Select the necessary DOM elements.
+  const modalContainer = document.querySelector(".modal__container");
+  const modalCloseButton = document.querySelector(".modal__close__button");
+  const modalContainerUser = document.querySelector(".modal__container__user");
+
+  // Close the modal window if the user clicks outside of it.
+  window.onclick = function (e) {
+    if (e.target == modalContainer) {
+      modalContainer.style.display = "none";
+    }
+  };
+
+  // Add listener to open the modal window
+
+  modalContainer.style.display = "block";
+  modalCloseButton.addEventListener("click", () => {
+    modalContainer.style.display = "none";
+  });
+
+  // Display Modal Window user Data
+  const modalUser = userData[user];
+
+  // Split the birthday into a usable format
+  const modalDOB = modalUser.dob.date.split("T");
+
+  const modalUserData = `
+    <img src="${modalUser.picture.large}">
+    <h2>${modalUser.name.first} ${modalUser.name.last}</h2>
+    <p>${modalUser.email}</p>
+    <p>${modalUser.location.state}</p>
+    <div class="separator"></div>
+    <p class="modal--p">${modalUser.phone}</p>
+    <p class="modal--p">${modalUser.location.street.number} ${modalUser.location.street.name}
+    <p class="modal--p">Birthday: ${modalDOB[0]}</p>
+    <button id="prev-button">Previous</button> <button id="next-button">Next</button>
+  `;
+  modalContainerUser.innerHTML = modalUserData;
+
+  // Modal User Scroll Buttons
+  const prevButton = document.getElementById("prev-button");
+  const nextButton = document.getElementById("next-button");
+
+  prevButton.addEventListener("click", () => {
+    if (currentUser === 0) {
+      modalContainer.style.display = "none";
+    } else {
+      currentUser -= 1;
+      displayModalUser(currentUser);
+    }
+  });
+
+  nextButton.addEventListener("click", () => {
+    if (currentUser === 11) {
+      modalContainer.style.display = "none";
+    } else {
+      currentUser += 1;
+      displayModalUser(currentUser);
+    }
+  });
+}
