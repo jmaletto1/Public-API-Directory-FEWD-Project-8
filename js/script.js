@@ -22,7 +22,7 @@ function displayUsers(data) {
         <div class="user__image">
             <img src="${data[x].picture.medium}">
         </div>
-        <div>
+        <div class="user--text">
         <h2>${data[x].name.first} ${data[x].name.last}</h2>
             <p>${data[x].email}</p>
             <p>${data[x].location.city} </p>
@@ -42,31 +42,15 @@ function displayUsers(data) {
   // Search Button Function
   const searchInput = document.getElementById("search");
   searchInput.addEventListener("keyup", (e) => {
-    let searchResults = [];
     let search = e.target.value.toLowerCase();
-    if (search) {
-      for (let x = 0; x < userData.length; x++) {
-        const firstName = userData[x].name.first.toLowerCase();
-        const lastName = userData[x].name.last.toLowerCase();
-
-        if (firstName.includes(search) || lastName.includes(search)) {
-          searchResults.push(userData[x]);
-        }
+    userCards.forEach((userCard) => {
+      let name = userCard.querySelector("h2").textContent.toLowerCase();
+      if (name.includes(search)) {
+        userCard.style.display = "";
+      } else {
+        userCard.style.display = "none";
       }
-      if (searchResults) {
-        // $(userContainer).empty();
-        while (userContainer.firstChild) {
-          userContainer.removeChild(userContainer.lastChild);
-        }
-        displayUsers(searchResults);
-      }
-    } else {
-      while (userContainer.firstChild) {
-        userContainer.removeChild(userContainer.lastChild);
-      }
-      // $(userContainer).empty();
-      displayUsers(userData);
-    }
+    });
   });
 }
 
@@ -104,7 +88,7 @@ function displayModalUser(user, data) {
     <p>${modalUser.location.state}</p>
     <div class="separator"></div>
     <p class="modal--p">${modalUser.phone}</p>
-    <p class="modal--p">${modalUser.location.street.number} ${modalUser.location.street.name}
+    <p class="modal--p">${modalUser.location.street.number} ${modalUser.location.street.name}, ${modalUser.location.state} ${modalUser.location.postcode}
     <p class="modal--p">Birthday: ${modalDOB[0]}</p>
     <button id="prev-button" class="modal--button">Previous</button> <button id="next-button" class="modal--button">Next</button>
   `;

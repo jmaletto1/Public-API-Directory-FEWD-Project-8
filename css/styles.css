@@ -85,6 +85,7 @@ p {
 /* User Card */
 
 .user__card {
+  background: rgba(0, 0, 0, 0.04);
   border: 1px solid lightgrey;
   border-radius: 10px;
   display: flex;
@@ -103,7 +104,7 @@ p {
 
 .user__card img {
   border-radius: 50px;
-  max-width: 50px;
+  /* max-width: 50px; */
 }
 
 .user__image {
@@ -113,6 +114,10 @@ p {
 p {
   font-size: 0.55rem;
   margin: 0.25rem 0;
+}
+
+.user--text {
+  text-align: left;
 }
 
 @media screen and (min-width: 768px) {
